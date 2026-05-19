@@ -62,6 +62,11 @@ async function main() {
     await sequelize.sync({ alter: true });
     logger.info('✅ Database models synchronized.');
 
+    // Render uchun HTTP server - bot.launch() DAN OLDIN
+    const PORT = process.env.PORT || 3000;
+    http.createServer((_, res) => { res.end('OK'); }).listen(PORT);
+    logger.info(`✅ Health check server listening on port ${PORT}`);
+
     // Create and launch bot
     const bot = createBot();
 
@@ -77,11 +82,6 @@ async function main() {
 
     await bot.launch();
     logger.info(`✅ Bot is running! Username: @${bot.botInfo?.username}`);
-
-    // Render uchun HTTP server
-    const PORT = process.env.PORT || 3000;
-    http.createServer((_, res) => { res.end('OK'); }).listen(PORT);
-    logger.info(`✅ Health check server listening on port ${PORT}`);
 
   } catch (error) {
     logger.error('❌ Fatal startup error:', error);
